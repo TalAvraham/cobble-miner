@@ -1,0 +1,40 @@
+IF(@running)
+
+    LOG("&7<CobbleMiner> &8Manually Shutdown")
+
+    // Manually Shutdown
+    STOP("ReturnToWork")
+    STOP("CaptchaDetector")
+    UNSET(@returning)
+
+    EXEC("ShutDown.txt","ShutDown")
+
+ELSE
+    SET(@running)
+    SET(@auto_return)
+    EXEC("Config.txt","Config")
+
+    LOG("&7<CobbleMiner> &2Started.")
+    IF(@#reminder != 0)
+        LOG("&7<CobbleMiner> &8Make sure to use &6Silverfish &8as your pet!")
+    ENDIF
+    LOG("&7<CobbleMiner> &8Pod %@#pod% mode, Refresh every %@#refresh_delay% minutes.")
+
+    LOGTO("%@&logfile%.txt","%@&logprefix% Started.")
+    LOGTO("%@&logfile%.txt","%@&logprefix% Pod %@#pod% mode, Refresh every %@#refresh_delay% minutes")
+
+
+    // Prevent of duplicate tasks
+    STOP("CaptchaDetector")
+    STOP("CheckPosition")
+
+    // Initiate tasks
+    EXEC("AutoMine.txt","AutoMine")
+    EXEC("MoveHead.txt","MoveHead")
+    EXEC("CheckPosition.txt","CheckPosition")
+    EXEC("CaptchaDetector.txt","CaptchaDetector")
+
+    @#refresh_delay = @#refresh_delay * 60
+    WAIT(%@#refresh_delay%)
+    EXEC("Refresh.txt","Refresh")
+ENDIF

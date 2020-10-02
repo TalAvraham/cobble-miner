@@ -1,0 +1,53 @@
+#counter = 0
+
+DO
+    // Get position difference
+    #x1 = XPOS
+    #z1 = ZPOS
+    WAIT(2500ms)
+    #x2 = XPOS
+    #z2 = ZPOS
+
+    // Fix position if we're stuck
+    IF( (%#x1% = %#x2%) && (%#z1% = %#z2%) )
+        LOG("&7<CobbleMiner> &6Stuck! Fixing position...")
+        LOGTO("%@&logfile%.txt","%@&logprefix% Stuck! (X=%XPOS%, Z=%ZPOS%) Fixing Position")
+        KEYUP("FORWARD")
+
+        GETSLOT(minecraft:golden_pickaxe,#slot,1)
+        SLOT(%#slot%)
+        KEYDOWN("JUMP")
+        KEYDOWN("FORWARD")
+
+        // Check if got stuck outside the macine
+        IF(%#z1% > %@#macine_z%)
+            KEYDOWN("RIGHT")
+        ELSE
+            KEYDOWN("LEFT")
+        ENDIF
+
+        WAIT(1)
+        KEYUP("JUMP")
+        KEYUP("LEFT")
+        KEYUP("RIGHT")
+
+        // For cases that GoTo get stuck
+        UNSET(@walk)
+
+        // Count how much fix position tried to fix
+        INC(#counter)
+    ELSE
+        #counter = 0
+    ENDIF
+
+    // Refresh if we're unable to fix the position
+    IF(#counter = 5)
+        WAIT(1)
+        LOG("&7<CobbleMiner> &3Stuck! Refreshing.")
+        LOGTO("%@&logfile%.txt","%@&logprefix% Stuck! (X=%XPOS%, Z=%ZPOS%) Refreshing")
+        ECHO("/hub")
+        INC(@#stuckrefresh,1)
+        #counter = 0
+        STOP
+    ENDIF
+WHILE(@running | @returning)

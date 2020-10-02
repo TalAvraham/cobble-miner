@@ -1,0 +1,58 @@
+// Choose what log prefix you want + log file name
+@&logprefix = "[%TIME%]"
+@&logfile = "LOG - %SERVER% - %PLAYER% - %DATE%"
+
+// Choose what is the CobbleStats logfile name
+@&statsfile = "CobbleStats"
+
+// Choose the name of the captcha logfile.
+@&captchafile = "CaptchaAlerts.txt"
+
+// Pet reminder
+@#reminder = 0
+
+// Determine if you are using a super compactor 4000 / 5000 / 6000 or not
+@#compactor = 1
+
+// Time between each refresh (minutes)
+@#refresh_delay = 30
+
+// Store & Refresh - Store items every specific number of planned refreshes. (off = 0 / compactor is false)
+@#store_refresh = 2
+
+// Choose what pod to use. "pod" value can be 1 / 2 / 3
+@#pod = 1
+
+// Pods and coordinates
+// macine_x,y,z represent the first block inside the macine
+
+IF(@#pod = 1)
+    @#macine_x = 41
+    @#macine_y = 99
+    @#macine_z = -13
+
+    @#chest_x = @#macine_x + 3
+    @#tp_pad = @#macine_z - 2
+
+ELSEIF(@#pod = 2)
+    @#macine_x = 43
+    @#macine_y = 99
+    @#macine_z = -14
+
+    @#chest_x = @#macine_x + 1
+    @#tp_pad = @#macine_z - 2
+
+ELSEIF(@#pod = 3)
+    @#macine_x = -4
+    @#macine_y = 100
+    @#macine_z = -1
+
+    @#chest_x = @#macine_x + 1
+    @#tp_pad = @#macine_z - 2
+
+ENDIF
+
+
+IF(@#compactor = 0)
+    @#store_refresh = 0
+ENDIF

@@ -1,0 +1,86 @@
+// Enchanted cobblestone value at the Bazzar
+#cobblevalue = 800
+
+// Stats value calculate
+#regular = @#cobble * 160
+#profit = @#cobble * #cobblevalue
+
+#xp = @#livexp - @#startxp
+#xp = #xp + @#midxp
+
+// determine color codes
+IF(@#stuckrefresh > 0)
+    &color = &c
+ELSE
+    &color = &a
+ENDIF
+
+
+// print stats
+IF(@#print_stats = 1)
+
+    IF(%#xp% > 0)
+        LOG("")
+        LOG("&8---------- &6&lCobbleMiner Stats:&8 ----------")
+        LOG("")
+        LOG("                 &eCobblestone mined: &a%#regular%")
+        LOG("         &eEnchanted cobblestone crafted: &a%@#cobble%")
+
+        IF(@#levelup > 0)
+        LOG("         &eMining XP earned: &a%#xp% &f&k1&r&d&lLEVEL UP!&f&k1")
+        ELSE
+        LOG("                &eMining XP earned: &a%#xp%")
+        ENDIF
+
+        LOG("          &eExpected profit: &a%#profit%$ &7(%#cobblevalue%$ each)")
+        LOG("")
+        LOG("                 &ePlanned Refreshs: &a%@#refresh%")
+        LOG("                &eUnplanned Refreshs: %&color%%@#stuckrefresh%")
+        LOG("                 &eCaptcha Detected: &a%@#captcha_counter%")
+        LOG("")
+
+        IF(@&starttim != 0)
+        LOG("                  &7Start time %@&starttim%")
+        ENDIF
+
+        LOG("&8---------------------------------------")
+
+    ELSE
+        LOG("")
+        LOG("&8---------- &6&lCobbleMiner Stats:&8 ----------")
+        LOG("")
+        LOG("                    &e&lNo stats yet :(")
+        LOG("          &eStart CobbleMiner to have stats")
+        LOG("")
+        LOG("&8---------------------------------------")
+    ENDIF
+
+ENDIF
+
+// Print stats to log file
+LOGTO("%@&statsfilename%.txt","---------------------------")
+LOGTO("%@&statsfilename%.txt","CobbleMiner Stats:")
+LOGTO("%@&statsfilename%.txt","Pod %@#pod%, %PLAYER%")
+
+LOGTO("%@&statsfilename%.txt","")
+LOGTO("%@&statsfilename%.txt","Cobblestone mined: %#regular%")
+LOGTO("%@&statsfilename%.txt","Enchanted cobblestone crafted: %@#cobble%")
+
+IF(@#levelup > 0)
+LOGTO("%@&statsfilename%.txt","XP earned: %#xp% - LEVEL UP!")
+ELSE
+LOGTO("%@&statsfilename%.txt","XP earned: %#xp%")
+ENDIF
+LOGTO("%@&statsfilename%.txt","Expected profit: %#profit%$ (%#cobblevalue%$ each)")
+LOGTO("%@&statsfilename%.txt","")
+
+LOGTO("%@&statsfilename%.txt","Planned Refreshs: %@#refresh%")
+LOGTO("%@&statsfilename%.txt","Unplanned Refreshs: %@#stuckrefresh%")
+LOGTO("%@&statsfilename%.txt","Captcha Detected: %@#captcha_counter%")
+
+LOGTO("%@&statsfilename%.txt","")
+IF(@&starttim != 0)
+LOGTO("%@&statsfilename%.txt","Start time %@&starttim%")
+ENDIF
+
+LOGTO("%@&statsfilename%.txt","---------------------------")

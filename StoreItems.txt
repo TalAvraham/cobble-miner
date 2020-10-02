@@ -1,0 +1,138 @@
+IF(@running)
+    SET(@storing_items)
+
+    LOG("&7<CobbleMiner> &6Storing cobblestone...")
+    LOGTO("%@&logfile%.txt","%@&logprefix% Storing cobblestone")
+    // Stopping automine
+    STOP("AutoMine")
+    STOP("MoveHead")
+    STOP("CheckPosition")
+    KEYUP("FORWARD")
+
+    //crafting system
+    IF(@#compactor = 0)
+        ECHO("/craft")
+        WAIT(2)
+
+        // Convert to enchanted
+        DO
+            GETSLOTITEM(16,&item)
+            IF(%&item% = "cobblestone")
+                SLOTCLICK(16)
+                // Count total cobble generated for stats
+                INC(@#cobble,1)
+            ELSE
+                BREAK
+            ENDIF
+            WAIT(400ms)
+        WHILE(1)
+
+        WAIT(300ms)
+        GUI()
+        WAIT(1)
+        LOGTO("%@&logfile%.txt","%@&logprefix% Done Crafting %@#cobble% enchated cobblestone")
+    ENDIF
+
+    EXEC("CheckPosition.txt","CheckPosition")
+    
+    // Walk to the chest
+    KEYDOWN("SPRINT")
+
+    EXEC("GoTo.txt","GoTo","Z","%@#macine_z%")
+    DO
+    WHILE(@walk)
+
+    EXEC("GoTo.txt","GoTo","X","%@#chest_x%")
+    DO
+    WHILE(@walk)
+
+    KEYUP("SPRINT")
+    
+
+    STOP("CheckPosition")
+
+    // Pick up golden pickaxe
+    GETSLOT(minecraft:golden_pickaxe,#slot,1)
+    SLOT(%#slot%)
+    
+    // look at the chest
+    LOOKS(90,40,1)
+
+    IF(@#compactor = 0)
+        // Store Items without super compactor 4000+
+
+        // Refresh invisible cobblestone
+        KEY("USE")
+        WAIT(2)
+        GUI()
+        WAIT(1)
+    
+        // Store items without super compactor 4000+
+        #hotbar_slot = 2
+        // 'slot' represents the slot in doublechest GUI
+        FOR(#slot,82,88)
+            SLOT(%#hotbar_slot%)
+            IFMATCHES(%ITEMNAME%,"Enchanted Cobblestone")
+                BREAK
+            ENDIF
+            INC(#hotbar_slot)
+        NEXT
+    
+        KEY("USE")
+        WAIT(1)
+        SLOTCLICK(%#slot%,0,1)
+
+        LOGTO("%@&filename%.txt","%@&logprefix% Done storing from slot %#hotbar_slot%")
+
+    ELSEIF(@#compactor = 1)
+        // Store Items with super compactor 4000+
+        #hotbar_slot = 2
+        // 'slot' represents the hotbar slot inside the doublechest GUI
+        FOR(#slot,82,88)
+            SLOT(%#hotbar_slot%)
+            IFMATCHES(%ITEMNAME%,"Enchanted Cobblestone")
+                KEY("USE")
+                WAIT(1)
+                GETSLOTITEM(%#slot%,&item,#stacksize)
+                WAIT(1)
+                SLOTCLICK(%#slot%,0,1)
+
+                // Count total cobble generated for stats
+                INC(@#cobble,%#stacksize%)
+
+                WAIT(300ms)
+                GUI()
+                WAIT(100ms)
+            ENDIF
+            INC(#hotbar_slot)
+        NEXT
+        LOGTO("%@&filename%.txt","%@&logprefix% Done storing cobblestone!%")
+    ENDIF
+
+    WAIT(300ms)
+    GUI()
+    EXEC("CheckPosition.txt","CheckPosition")
+    
+
+    // Walk back to pod
+    EXEC("GoTo.txt","GoTo","X","%@#macine_x%")
+    DO
+    WHILE(@walk)
+
+    EXEC("GoTo.txt","GoTo","Z","@#tp_pad")
+    DO
+    WHILE(@walk)
+    
+    // Update stats
+    EXEC("CobbleStats.txt","CobbleStats")
+
+    // Resume auto-mining
+    EXEC("AutoMine.txt","AutoMine")
+    EXEC("MoveHead.txt","MoveHead")
+
+    UNSET(@storing_items)
+
+ELSE
+    LOG("NOT RUNNING")
+ENDIF
+

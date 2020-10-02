@@ -1,0 +1,26 @@
+//stats reset script
+LOG("&7<CobbleMiner> &eStats Refreshed!")
+
+// cobblestone count
+SET(@#cobble,0)
+SET(@#refresh,0)
+SET(@#stuckrefresh,0)
+
+//level up system
+
+SET(@#livexp,0)
+SET(@#startxp,0)
+
+SET(@#livemaxxp,0)
+SET(@#maxxp,0)
+
+SET(@#midxp,0)
+SET(@#levelup,0)
+
+// start time
+SET(@&starttim,0)
+
+// Captcha
+SET(@#captcha_counter,0)
+
+

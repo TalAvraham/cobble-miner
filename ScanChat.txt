@@ -1,0 +1,48 @@
+IF(@running)
+    IFMATCHES(%CHAT%,"Your inventory is full!")
+        EXEC("StoreItems.txt","StoreItems")
+    ENDIF
+
+    // XP System
+
+    IFMATCHES(%CHAT%,"Mining \(([0-9]+\,[0-9]+\,[0-9]+|[0-9]+\,[0-9]+|[0-9]+)",#temp_livexp,1)
+        // bug fix
+        @#livexp = %#temp_livexp%
+        
+        IF(%@#startxp% = 0)
+            // Storing to startxp & starttim the first xp and time after stats refresh.
+            @#startxp = %@#livexp%
+            @&starttim = %TIME%
+
+        ENDIF
+
+    ENDIF
+
+    IFMATCHES(%CHAT%,"Mining \(([0-9]+\,[0-9]+\,[0-9]+..|[0-9]+\,[0-9]+..|[0-9]+..)\/([0-9]+\,[0-9]+\,[0-9]+|[0-9]+\,[0-9]+|[0-9]+)",#temp_livemaxxp,2)
+        // bug fix
+        @#livemaxxp = %#temp_livemaxxp%
+    
+        IF(%@#maxxp% = 0)
+            // Storing Max level xp
+            @#maxxp = %@#livemaxxp%
+        ENDIF
+
+    ENDIF
+    
+
+    //level up
+    IF(%@#maxxp% != %@#livemaxxp%)
+        // Storing xp progress when level up
+        @#midxp = @#midxp + @#maxxp - @#startxp
+        
+        
+        // Count again
+        @#maxxp = %@#livemaxxp%
+        @#startxp = 1
+
+        // LEVEL UP counter for stats
+        INC(@#levelup,1)
+                
+    ENDIF
+
+ENDIF

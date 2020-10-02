@@ -1,0 +1,76 @@
+IF(@returning)
+    LOG("&7<CobbleMiner> &eWaiting for the world to load...")
+    LOGTO("%@&logfile%.txt","%@&logprefix% Waiting for the world to load")
+
+    // Update live image when world change
+    IF(%ITEMCODE% == "item.map")
+        LOGTO("%@&captchafile%","%@&logprefix% Captcha detected.")
+    ENDIF
+
+    ECHO("/fly")
+
+    WAIT(10)
+    #y = YPOS
+
+    IF(%#y% = 70)
+        // Skyblock Hub
+        LOG("&7<CobbleMiner> &e&lSkyBlock Hub&r&e, Warping back to private island...")
+        LOGTO("%@&filename%.txt","%@&logprefix% SkyBlock Hub, Warping back to private island")
+        ECHO("/warp home")
+
+    ELSEIF( (%#y% = %@#macine_y%) )
+        // Our Skyblock Island
+        LOG("&7<CobbleMiner> &e&lPrivate Island&r&e, Entering the machine...")
+        LOGTO("%@&logfile%.txt","%@&logprefix% Private Island, Entering the machine")
+        EXEC("CheckPosition.txt","CheckPosition")
+
+        // entering to the macine
+        EXEC("GoTo.txt","GoTo","X","%@#macine_x%")
+        DO
+        WHILE(@walk)
+
+        EXEC("GoTo.txt","GoTo","Z","%@#tp_pad%")
+        DO
+        WHILE(@walk)
+
+        SLOT(1)
+        
+        // Resuming cobbleminer
+        EXEC("CobbleMiner.txt","CobbleMiner")
+        UNSET(@returning)
+
+    ELSEIF( (%#y% = 69) || (%#y% = 86) || (%#y% = 87) || (%#y% = 88) )
+        LOG("&7<CobbleMiner> &e&lMain lobby&r&e, Warping back to SkyBlock...")
+        LOGTO("%@&filename%.txt","%@&logprefix% Main lobby, Warping back to SkyBlock")
+        ECHO("/skyblock")
+
+    ELSEIF( (%#y% = 31) )
+        LOG("&7<CobbleMiner> &e&lLimbo&r&e, Warping back to Hypixel...")
+        LOGTO("%@&filename%.txt","%@&logprefix% Limbo, Warping back to Hypixel")
+        ECHO("/lobby")
+
+    ELSE
+        LOG("&7<CobbleMiner> &eCan't recognize this world!")
+        EXEC("ShutDown.txt","ShutDown")
+        
+    ENDIF
+
+ELSEIF(@auto_return)
+
+    LOG("&7<CobbleMiner> &bWorld changed while mining!")
+    LOG("&7<CobbleMiner> &bStarting return process.")
+    LOG("")
+    SET(@returning)
+    
+    // Stop tasks
+    STOP("CaptchaDetector")
+    EXEC("ShutDown.txt","ShutDown")
+    
+    // Initiate return process
+    EXEC("CaptchaDetector.txt","CaptchaDetector")
+    EXEC("ReturnToWork.txt","ReturnToWork")
+ELSE
+
+    LOG("&7<CobbleMiner> &bReturnToWork Stopped, You need a refresh!")
+
+ENDIF

@@ -1,0 +1,7 @@
+// Repeatedly move head to gain XP from mining.
+DO
+    IFMATCHES(%HITID%,"cobblestone")
+        LOOKS(0,270,0.5)
+        LOOKS(0,280,0.5)
+    ENDIF
+WHILE(@running)

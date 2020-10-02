@@ -1,0 +1,13 @@
+// Setup commands
+GETSLOT(minecraft:golden_pickaxe,#slot,1)
+SLOT(%#slot%)
+LOOKS(0,270,1)
+KEYDOWN("FORWARD")
+
+DO()
+    // Keep mining as long as we're looking at cobblestone
+    IFMATCHES(%HITID%,"cobblestone")
+        KEY("ATTACK")
+    ENDIF
+
+WHILE(@running)

@@ -1,0 +1,71 @@
+SET(@walk)
+
+// Getting parameters
+&axis = $$[1]
+#dest = $$[2]
+
+LOGTO("%@&logfile%.txt","%@&logprefix% Going to - %&axis%,%#dest%")
+
+// Facing the relevent direction
+IF(%&axis% = "X")
+
+    IF(%XPOS% < %#dest%)
+        #dest = %#dest% - 1
+        #fixtime = 140
+        LOOKS(90,0,1)
+
+    ELSE
+        #dest = %#dest% + 1
+        #fixtime = 160
+        LOOKS(270,0,1)
+
+    ENDIF
+
+    // Start walking
+    KEYDOWN("FORWARD")
+    DO
+    UNTIL(%XPOS% = %#dest%)
+    KEYUP("FORWARD")
+    
+    // Fixing position
+    KEYDOWN("FORWARD")
+    WAIT(%#fixtime%ms)
+    KEYUP("FORWARD")
+
+    //LOG("&7<CobbleMiner> &3Destenation Reached (X)!")
+    LOGTO("%@&logfile%.txt","%@&logprefix% Destenation Reached (%XPOS%)!")
+    UNSET(@walk)
+
+ELSEIF(%&axis% = "Z")
+
+    IF(%ZPOS% < %#dest%)
+        #dest = %#dest% - 1
+        #fixtime = 140
+        LOOKS(180,0,1)
+
+    ELSE
+        #dest = %#dest% + 1
+        #fixtime = 160
+        LOOKS(0,0,1)
+
+    ENDIF
+
+    // Start walking
+    KEYDOWN("FORWARD")
+    DO
+    UNTIL(%ZPOS% = %#dest%)
+    KEYUP("FORWARD")
+
+    // Fixing position
+    KEYDOWN("FORWARD")
+    WAIT(%#fixtime%ms)
+    KEYUP("FORWARD")
+
+    //LOG("&7<CobbleMiner> &3Destenation Reached (Z)!")
+    LOGTO("%@&logfile%.txt","%@&logprefix% Destenation Reached (%ZPOS%)!")
+    UNSET(@walk)
+
+ELSE
+    LOG("&7<CobbleMiner>&3 %&axis% cannot be used as an axis type!")
+
+ENDIF

@@ -1,0 +1,44 @@
+IF(@returning = 0)
+
+    // Store & Refresh System
+
+    IF( (@#store_refresh !=0) && (%YPOS% = %@#macine_y%) && (%ZPOS% < %@#macine_z%) )
+        
+        INC(@#store_delay,1)
+
+        IF(@#store_refresh = @#store_delay)
+            EXEC("StoreItems.txt","StoreItems")
+
+            DO()
+            WHILE(@storing_items)
+
+            SET(@#store_delay,0)
+            WAIT(3)
+
+        ELSE
+            #delay = @#store_refresh - @#store_delay
+            IF(#delay > 1)
+                LOG("&7<CobbleMiner> &3Storing items in %#delay% refreshes")
+            ELSE
+                LOG("&7<CobbleMiner> &3Storing items at the next refresh")
+            ENDIF
+        ENDIF
+
+    ENDIF
+
+    // Refresh System
+    LOG("&7<CobbleMiner> &3Refreshing...")
+    INC(@#refresh,1)
+    LOGTO("%@&logfile%.txt","%@&logprefix% Refreshing - (%@#refresh_delay% minutes)")
+
+    // Limbo
+    IF(%YPOS% = 31)
+        ECHO("/lobby skyblock")
+    ELSE
+        ECHO("/hub")
+    ENDIF
+
+ELSE
+    LOG("&7<CobbleMiner> &3Refresh unavailable while returning to work!")
+
+ENDIF

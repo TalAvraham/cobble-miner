@@ -1,0 +1,21 @@
+// Stops all CobbleMiner tasks
+LOG("&7<CobbleMiner> &4Shutting down.")
+LOGTO("%@&logfile%.txt","%@&logprefix% Shutting down")
+
+UNSET(@running)
+UNSET(@walk)
+
+STOP("CobbleMiner")
+STOP("GoTo")
+STOP("CheckPosition")
+STOP("MoveHead")
+STOP("AutoMine")
+STOP("StoreItems")
+STOP("Refresh")
+
+// Stop movement
+KEYUP("FORWARD")
+KEYUP("BACK")
+KEYUP("LEFT")
+KEYUP("RIGHT")
+KEYUP("JUMP")

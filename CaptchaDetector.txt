@@ -1,0 +1,34 @@
+// Captcha detector
+DO()
+    IF(%ITEMCODE% == "item.map")
+    LOGTO("%@&captchafile%","%@&logprefix% Captcha detected.")
+    LOG("&7<CobbleMiner> &dCaptcha Detected!")
+    EXEC("Shutdown.txt","Shutdown")
+
+    // Stop returning proces
+    STOP("ReturnToWork")
+    UNSET(@returning)
+    UNSET(@auto_return)
+
+    // INC Captcha counter for stats
+    INC(@#captcha_counter,1)
+
+    ENDIF
+
+WHILE(@running | @returning | @auto_return)
+
+
+LOG("")
+LOG("&7<CobbleMiner> &dWaiting for a captcha solution...")
+
+
+// Solution detector
+#solution = 0
+DO()
+
+    IF(%ITEMCODE% != "item.map")
+        LOG("&7<CobbleMiner> &dCaptcha solved!")
+        #solution = 1
+    ENDIF
+
+WHILE(#solution = 0)
