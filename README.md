@@ -1,5 +1,6 @@
 # CobbleMiner
-Plug & Play minecraft bot for Hypixel Skyblock server, to generate in-game currency with a cobblestone generator.
+Plug & Play minecraft bot for Hypixel Skyblock server, to generate in-game currency with a cobblestone generator.  
+Uses 'Macro/Keybinds' mod for minecraft, mod configuration is below.
 
 ## KeyBinds Configuration:
 
